@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astral · Манга</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="logo" onclick="switchPage('catalog')">Astral <span>✦</span></div>
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Поиск книг, авторов" id="searchInput">
+      </div>
+      <div class="icon-group">
+        <i class="fas fa-user" onclick="openModal()"></i>
+        <div class="cart-badge" onclick="switchPage('cart')">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="count" id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner" onclick="switchPage('sale')">
+    <div class="banner-text">
+      <h2><i class="fas fa-fire"></i> Летняя распродажа!</h2>
+      <p>Скидки до 40% на топовые серии манги</p>
+      <div class="highlight"><i class="fas fa-tag"></i> Атака титанов · Магическая битва · Ван-Пис</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+      <div class="banner-timer">
+        <i class="fas fa-clock"></i> До конца: <span id="timerDisplay">3д 12ч</span>
+      </div>
+      <div class="banner-arrow"><i class="fas fa-chevron-circle-right"></i></div>
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <button class="active" onclick="switchPage('catalog')"><i class="fas fa-th-large"></i> Каталог</button>
+    <button onclick="switchPage('sale')"><i class="fas fa-tags"></i> Акции</button>
+    <button onclick="switchPage('cart')"><i class="fas fa-shopping-bag"></i> Корзина <span id="navCartCount" style="background:#b34a6f;color:white;padding:0 8px;border-radius:30px;font-size:12px;margin-left:4px;">0</span></button>
+  </div>
+
+  <div class="page active" id="pageCatalog">
+    <div class="filters">
+      <div class="chip"><i class="fas fa-bolt"></i> “Магическая битва”, “Человек бензопила”</div>
+      <div class="sort-tabs">
+        <span class="active" data-sort="popular">По популярности</span>
+        <span data-sort="new">По новизне</span>
+        <span data-sort="cheap">Сначала дешевые</span>
+        <span data-sort="expensive">Сначала дорогие</span>
+        <span data-sort="rating">По рейтингу</span>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <aside class="catalog">
+        <h4><i class="fas fa-book-open"></i>Каталог</h4>
+        <ul>
+          <li><i class="fas fa-angle-right"></i> Комиксы и манга</li>
+          <li><i class="fas fa-angle-right"></i> Манга</li>
+          <li><i class="fas fa-angle-right"></i> Руманга</li>
+          <li><i class="fas fa-angle-right"></i> Манга исекай</li>
+          <li><i class="fas fa-angle-right"></i> Манга сёння</li>
+          <li><i class="fas fa-angle-right"></i> Манга сёдзё</li>
+          <li><i class="fas fa-angle-right"></i> Манга романтика</li>
+          <li><i class="fas fa-angle-right"></i> Манга комедия</li>
+          <li><i class="fas fa-angle-right"></i> Манга ужасы</li>
+          <li><i class="fas fa-angle-right"></i> Манга драма</li>
+          <li><i class="fas fa-angle-right"></i> Манга боевик</li>
+          <li><i class="fas fa-angle-right"></i> Манга фэнтези</li>
+          <li><i class="fas fa-angle-right"></i> Другие жанры</li>
+          <li><i class="fas fa-angle-right"></i> OEL-манга</li>
+        </ul>
+      </aside>
+
+      <div class="products" id="productGrid"></div>
+    </div>
+
+    <div class="detail" id="detailView">
+      <span class="back" onclick="closeDetail()"><i class="fas fa-arrow-left"></i> Назад</span>
+      <div class="d-cover" id="dCover"><i class="fas fa-book-open"></i></div>
+      <div class="d-title" id="dTitle">Атака титанов. Том 33, 34</div>
+      <div class="d-author" id="dAuthor">Хадзимэ Исаяма</div>
+      <div class="d-tags" id="dTags"></div>
+      <div class="d-desc" id="dDesc">Покинувшие Парадиз титаны, ведомые Эреном Йегером, уничтожают все живое...</div>
+      <div class="d-price" id="dPrice">1 252₽ <small>1 474₽</small></div>
+      <button class="btn btn-primary" onclick="addFromDetail()"><i class="fas fa-shopping-bag"></i> Купить</button>
+      <span class="d-stock"><i class="fas fa-check-circle"></i> В наличии</span>
+      <span class="d-delivery"><i class="fas fa-truck"></i> Доставим завтра, бесплатно</span>
+    </div>
+  </div>
+
+  <div class="page" id="pageSale">
+    <div class="sale-header">
+      <button class="back-sale" onclick="switchPage('catalog')"><i class="fas fa-arrow-left"></i> Назад в каталог</button>
+      <h2><i class="fas fa-fire" style="color:#e63946;"></i> Товары по акции</h2>
+      <span style="color:#7a5063; font-size:14px;">Скидки до 40%</span>
+    </div>
+    <div class="sale-products" id="saleGrid"></div>
+  </div>
+
+  <div class="page" id="pageCart">
+    <div class="cart-panel">
+      <div class="cart-head">
+        <h2><i class="fas fa-shopping-bag"></i> Корзина</h2>
+        <button class="clear-cart" onclick="clearCart()"><i class="fas fa-trash-alt"></i> Очистить</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotal">
+        <span>Итого: 0 ₽</span>
+        <button class="btn-checkout" onclick="checkout()"><i class="fas fa-credit-card"></i> Оформить заказ</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal">
+      <span class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></span>
+      <h2>Добро пожаловать</h2>
+      <p class="subtitle">Войдите или создайте аккаунт</p>
+      <form id="registerForm" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label><i class="fas fa-phone-alt" style="color:#b34a6f; margin-right:6px;"></i>Телефон</label>
+          <input type="tel" id="phoneInput" placeholder="+7 000 000 00 00" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user" style="color:#b34a6f; margin-right:6px;"></i>Имя</label>
+          <input type="text" id="nameInput" placeholder="Ваше имя" required>
+        </div>
+        <button type="submit" class="btn-submit"><i class="fas fa-arrow-right"></i> Получить код</button>
+      </form>
+      <div class="divider">или</div>
+      <div class="social-login">
+        <button onclick="alert('Вход через Google')"><i class="fab fa-google" style="color:#ea4335;"></i> Google</button>
+        <button onclick="alert('Вход через VK')"><i class="fab fa-vk" style="color:#4680c2;"></i> VK</button>
+      </div>
+      <div class="terms">Продолжая, вы принимаете <a href="#">Условия использования</a> и <a href="#">Политику конфиденциальности</a></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="col">
+      <strong><i class="fas fa-phone-alt"></i> Связь с нами</strong>
+      <span><i class="fas fa-phone"></i> +7 981 280 93 79</span>
+      <span><i class="fas fa-envelope"></i> astral1988@gmail.com</span>
+    </div>
+    <div class="col">
+      <strong>Информация</strong>
+      <span>Вопросы и ответы</span>
+      <span>Интернет-магазин</span>
+      <span>Знаем, что почитать</span>
+      <span>Акции / Распродажа</span>
+    </div>
+    <div class="col">
+      <strong>Помощь</strong>
+      <span>Доставка и оплата</span>
+      <span>Программа лояльности</span>
+      <span>Подарочные сертификаты</span>
+    </div>
+    <div class="col qr-box">
+      <div class="qr-container"><div id="qrcode"></div></div>
+      <div class="qr-text"><i class="fas fa-qrcode"></i> Наведите камеру<br><span style="font-size:12px; color:#7a5063;">Скачайте приложение Astral</span></div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
